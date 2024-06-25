@@ -1,4 +1,4 @@
-# Convert JSON downloads from a LI-COR smart chamber into a data frame
+# Convert JSON download from a LI-COR smart chamber into a data frame
 # Ben Bond-Lamberty June 2024
 
 library(jsonlite)
@@ -20,17 +20,18 @@ for(obs in seq_along(x$datasets)) {
     message("rep = ", rep)
     repdat <- dat$reps[[rep]]
 
-    # header contains info on instrument, dead bane, volume, etc.
+    # The header section contains information on instrument, 
+    # dead band, volume, etc. Store as a 1-row data frame
     header_df <- as.data.frame(repdat$header)
     
-    # convert main observational data into a d.f.
-    dat_info <- list()
+    # Convert main observational data into a data frame
+    data_info <- list()
     for(i in names(repdat$data)) {
-      dat_info[[i]] <- unlist(repdat$dat[[i]])
+      data_info[[i]] <- unlist(repdat$dat[[i]])
     }
-    dat_df <- as.data.frame(dat_info)
+    data_df <- as.data.frame(data_info)
     
-    # convert footer flux info into a d.f.
+    # Convert footer flux info into a 1-row data frame
     footer_info <- list()
     for(i in seq_along(repdat$footer$fluxes)) {
       fdf <- repdat$footer$fluxes[[i]]
@@ -41,8 +42,9 @@ for(obs in seq_along(x$datasets)) {
     }
     footer_df <- as.data.frame(footer_info)
     
-    # Combine and store
-    final_dat[[paste(obs, rep)]] <- cbind(rep_df, header_df, dat_df, footer_df)    
+    # Combine and store; note that the 1-row data frames get 
+    # replicated to have as many rows as the data
+    final_dat[[paste(obs, rep)]] <- cbind(rep_df, header_df, data_df, footer_df)    
   }
 }
 
