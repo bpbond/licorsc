@@ -50,3 +50,7 @@ for(obs in seq_along(x$datasets)) {
 
 # Combine everything into a single data frame
 out <- do.call("rbind", final_dat)
+
+library(lubridate)
+out$TIMESTAMP <- ymd_hms(out$Date, tz = out$TimeZone[1])
+
