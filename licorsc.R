@@ -1,3 +1,5 @@
+# Convert JSON downloads from a LI-COR smart chamber into a data frame
+# Ben Bond-Lamberty June 2024
 
 library(jsonlite)
 
@@ -17,17 +19,16 @@ for(obs in seq_along(x$datasets)) {
     
     message("rep = ", rep)
     repdat <- dat$reps[[rep]]
-    print(names(repdat))
-    
+
     # header contains info on instrument, dead bane, volume, etc.
     header_df <- as.data.frame(repdat$header)
     
     # convert main observational data into a d.f.
-    dat_df <- list()
+    dat_info <- list()
     for(i in names(repdat$data)) {
-      dat_df[[i]] <- unlist(repdat$dat[[i]])
+      dat_info[[i]] <- unlist(repdat$dat[[i]])
     }
-    dat_df <- as.data.frame(dat_df)
+    dat_df <- as.data.frame(dat_info)
     
     # convert footer flux info into a d.f.
     footer_info <- list()
